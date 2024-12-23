@@ -72,6 +72,7 @@ export const loginController = async (req, res, next) => {
             .setData({
                 acces_token: acces_token,
                 user_info: {
+                    user_pfp: user.user_pfp,
                     name: user.username,
                     email: user.email,
                     user_id: user.user_id
