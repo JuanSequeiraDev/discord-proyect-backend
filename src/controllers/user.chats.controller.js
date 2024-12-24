@@ -11,7 +11,6 @@ export const createUserChatController = async (req, res, next) => {
         const {username } = req.body
         const {user_id} = req.params
 
-        console.log(user_id)
         if(!Number(user_id)){
             return next(new AppError('user_id malformado', 400, {user_id: user_id}, 'MISSING_DATA'))
         }

@@ -8,7 +8,7 @@ const userRouter = Router()
 userRouter.post('/login', loginController)
 userRouter.post('/register', registerController)
 userRouter.get('/verify-email/:verification_token', verifyEmailController )
-userRouter.delete('/delete/:user_id' , deleteUserController)
+userRouter.delete('/delete/:user_id', authMiddleware, deleteUserController)
 userRouter.put('/reset-password/:reset_token' , resetPasswordController)
 userRouter.post('/forgot-password' , forgotPasswordController)
 

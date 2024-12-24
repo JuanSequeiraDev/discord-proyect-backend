@@ -69,7 +69,7 @@ class userRepository {
     }
 
     static async getUserByEmail(email) {
-        const [rows] = await pool.execute(`SELECT * FROM users WHERE email = ?`, [email])
+        const [rows] = await pool.execute(`SELECT * FROM users WHERE email = ? AND activo = true`, [email])
         return rows.length > 0 ? rows[0] : null
     }
 
@@ -90,7 +90,7 @@ class userRepository {
     static async deleteUserById(user_id) {
         try {
             await pool.execute(`
-            UPDATE users SET active = false WHERE user_id = ?
+            UPDATE users SET activo = false WHERE user_id = ?
             `, [user_id])
 
             const [rows] = await pool.execute(` SELECT * FROM users WHERE user_id = ?`, [user_id])

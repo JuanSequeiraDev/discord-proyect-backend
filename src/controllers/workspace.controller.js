@@ -48,6 +48,31 @@ export const createWorkspaceController = async (req, res, next) => {
     }
 }
 
+export const deleteWorkspaceChannelController = async (req, res, next) => {
+    try{
+        const {channel_id} = req.params
+
+        if(!Number(channel_id)){
+            return next(new AppError('channel_id malformado', 400, { channel_id: channel_id }, 'MISSING_DATA'))
+        }
+
+        const result = await workspaceRepository.deleteWorkspaceChannel(Number(channel_id))
+
+        const response = new ResponseBuilder()
+            .setOk(true)
+            .setStatus(200)
+            .setData(result)
+            .setMessage('Workspace channel deleted succesfully')
+            .setCode('SUCCES')
+            .build()
+
+        return res.status(200).json(response)
+    }
+    catch(error){
+        next(error)
+    }
+}
+
 export const getWorkspaceChannelsController = async (req, res, next) => {
     try {
         const { workspace_id } = req.params

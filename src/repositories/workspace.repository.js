@@ -76,6 +76,23 @@ class workspaceRepository {
         }
     }
 
+    static async deleteWorkspaceChannel(channel_id) {
+        try {
+            const query = `
+            UPDATE workspace_channel
+            SET activo = false
+            WHERE channel_id = ?
+            `
+
+            const [result] = await pool.execute(query, [channel_id])
+
+            return result
+        }
+        catch (error) {
+            throw new AppError('SQL query error', 500, { error: error }, 'FATAL_ERROR')
+        }
+    }
+
     static async createChannel(workspace_id, channel_name) {
         try {
             const query = `
@@ -147,8 +164,8 @@ class workspaceRepository {
         }
     }
 
-    static async addUserToWorkspace(user_id, workspace_id){
-        try{
+    static async addUserToWorkspace(user_id, workspace_id) {
+        try {
             const query = `
                 INSERT INTO workspace_members(user_id, workspace_id)
                 VALUES(?,?)
@@ -157,7 +174,7 @@ class workspaceRepository {
             const [result] = await pool.execute(query, [user_id, workspace_id])
 
             if (result.affectedRows > 0) {
-                return {user_id: user_id, workspace_id: workspace_id}
+                return { user_id: user_id, workspace_id: workspace_id }
             }
             else {
                 throw new AppError('Error SQL al crear el contacto', 500, result, 'FATAL_ERROR')
