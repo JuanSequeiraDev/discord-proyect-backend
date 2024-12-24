@@ -17,15 +17,15 @@ class userChatsRepository {
             const [rows] = await pool.execute(`
             SELECT u.username, u.user_pfp, uc.chat_id, ucm.content AS last_message_content, ucm.created_at AS last_message_time
             FROM user_contacts AS uc 
-            JOIN users AS u ON uc.user_contact_id = u.user_id 
+            JOIN users AS u ON IF(uc.user_id = ?, uc.user_contact_id = u.user_id, uc.user_id = u.user_id ) 
             LEFT JOIN user_chat_messages AS ucm ON uc.chat_id = ucm.chat_id 
             AND ucm.created_at = (
-                SELECT MAX(created_at) 
-                FROM user_chat_messages 
-                WHERE chat_id = uc.chat_id
+            SELECT MAX(created_at) 
+            FROM user_chat_messages 
+            WHERE chat_id = uc.chat_id
             )
-            WHERE uc.user_id = ? ;
-            `, [user_id])
+            WHERE uc.user_id = ? OR uc.user_contact_id = ?;
+            `, [user_id, user_id, user_id])
 
             if (result.affectedRows > 0) {
                 return rows
